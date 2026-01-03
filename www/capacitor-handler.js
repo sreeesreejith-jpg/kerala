@@ -2,22 +2,32 @@
     /**
      * Capacitor Hardware Back Button Handler
      * 
-     * Behavior:
-     * 1. On Sub-pages (Salary, EMI, etc.): Back button goes to Home (or previous history).
-     * 2. On Home page: Back button EXITS the app.
-     * 
-     * This prevents the app from closing unexpectedly when trying to navigate back to the menu.
+     * Robust implementation to prevent loops and ensure correct navigation.
      */
+    function setupBackButton() {
+        // Safe access to the Capacitor App plugin
+        const App = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
 
-    // Only initialize if Capacitor is available (running as an app)
-    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
-        const App = window.Capacitor.Plugins.App;
+        // If the plugin isn't ready yet, retry after a short delay
+        if (!App) {
+            // console.log("Nithara: App plugin not found yet, retrying...");
+            setTimeout(setupBackButton, 200);
+            return;
+        }
 
-        App.addListener('backButton', (data) => {
-            const currentPath = window.location.pathname;
+        // console.log("Nithara: Back button handler attached successfully.");
 
-            // Check if we are currently inside a sub-app directory
-            const subAppFolders = [
+        // Remove existing listeners to ensure we don't have duplicates/conflicts
+        if (App.removeAllListeners) {
+            App.removeAllListeners();
+        }
+
+        // Add our custom listener
+        App.addListener('backButton', function (data) {
+            const path = window.location.pathname;
+
+            // Define sub-app directories
+            const subApps = [
                 '/salary/',
                 '/emi/',
                 '/pay-revision/',
@@ -27,23 +37,28 @@
                 '/calculator/'
             ];
 
-            const isSubPage = subAppFolders.some(folder => currentPath.includes(folder));
+            const isSubPage = subApps.some(folder => path.indexOf(folder) !== -1);
 
             if (isSubPage) {
-                // Sub-page behavior: Go back to the previous page or Home
-                if (data.canGoBack) {
-                    window.history.back();
-                } else {
-                    // If no history within the app webview, force-return to the main portal
-                    window.location.href = '../index.html';
-                }
+                // CASE 1: We are on a Sub-Page (e.g., Salary)
+                // Action: Go BACK to the Home Portal.
+                // We use 'replace' to avoid creating a history loop (Home -> Salary -> Home -> Salary...)
+                // We assume the home page is one level up (../index.html)
+                window.location.replace('../index.html');
+
             } else {
-                // Home page behavior: Exit the app
-                // This matches the behavior of standard Android apps
+                // CASE 2: We are on the Home Page (root)
+                // Action: EXIT the App.
+                // This prevents going back to a previously visited sub-page (breaking the loop).
                 App.exitApp();
             }
         });
+    }
 
-        console.log('Nithara: Capacitor back button handler initialized.');
+    // Attempt to initialize immediately, or wait for load
+    if (document.readyState === 'complete') {
+        setupBackButton();
+    } else {
+        window.addEventListener('load', setupBackButton);
     }
 })();
