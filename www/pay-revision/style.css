@@ -1,10 +1,12 @@
 :root {
     --primary: #3b82f6;
     --primary-hover: #2563eb;
-    --bg-color: #f8fafc;
-    --card-bg: #ffffff;
-    --text-main: #1e293b;
-    --text-muted: #64748b;
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --input-bg: #1e293b;
     --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
     --before-color: #64748b;
     --after-color: #3b82f6;
@@ -425,22 +427,20 @@ footer {
     }
 }
 
-/* FORCE INPUT VISIBILITY FIX */
-/* FORCE INPUT VISIBILITY FIX - Light Mode */
 input,
 select,
 textarea {
-    background-color: #f1f5f9 !important;
-    color: #1e293b !important;
-    caret-color: #3b82f6 !important;
-    border: 1px solid #e2e8f0 !important;
+    background-color: var(--input-bg) !important;
+    color: var(--text-main) !important;
+    caret-color: var(--primary) !important;
+    border: 1px solid var(--border-color) !important;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-    background-color: #ffffff !important;
-    color: #1e293b !important;
+    background-color: var(--card-bg) !important;
+    color: var(--text-main) !important;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
 }
 
@@ -449,8 +449,8 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px #f1f5f9 inset !important;
-    -webkit-text-fill-color: #1e293b !important;
+    -webkit-box-shadow: 0 0 0 30px var(--input-bg) inset !important;
+    -webkit-text-fill-color: var(--text-main) !important;
 }
 
 /* Hide spin buttons */

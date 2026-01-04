@@ -142,12 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const grossOld = bp + daOldVal + daPendVal + hraOldVal;
 
         // Update Before UI
-        document.getElementById('res-bp-old').textContent = bp.toLocaleString();
-        document.getElementById('res-da-old').textContent = daOldVal.toLocaleString();
-        document.getElementById('res-da-pend').textContent = daPendVal.toLocaleString();
-        document.getElementById('res-hra-old').textContent = hraOldVal.toLocaleString();
-        document.getElementById('res-gross-old').textContent = grossOld.toLocaleString();
-        document.getElementById('gross-old-val').textContent = grossOld.toLocaleString();
+        document.getElementById('res-bp-old').textContent = bp;
+        document.getElementById('res-da-old').textContent = daOldVal;
+        document.getElementById('res-da-pend').textContent = daPendVal;
+        document.getElementById('res-hra-old').textContent = hraOldVal;
+        document.getElementById('res-gross-old').textContent = grossOld;
+        document.getElementById('gross-old-val').textContent = grossOld;
 
         // After Revision Calculations
         const daMergedVal = Math.round(bp * (daMergedPerc / 100));
@@ -166,19 +166,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const growthPerc = grossOld > 0 ? ((growth / grossOld) * 100).toFixed(1) : 0;
 
         // Update After UI
-        document.getElementById('res-bp-new').textContent = bp.toLocaleString();
-        document.getElementById('res-da-merged').textContent = daMergedVal.toLocaleString();
-        document.getElementById('res-fitment').textContent = fitmentVal.toLocaleString();
-        document.getElementById('res-actual-total').textContent = actualTotal.toLocaleString();
-        document.getElementById('res-bp-fixed').textContent = bpFixed.toLocaleString();
-        document.getElementById('res-bal-da').textContent = balDaVal.toLocaleString();
-        document.getElementById('res-hra-new').textContent = hraNewVal.toLocaleString();
-        document.getElementById('res-gross-new').textContent = grossNew.toLocaleString();
+        document.getElementById('res-bp-new').textContent = bp;
+        document.getElementById('res-da-merged').textContent = daMergedVal;
+        document.getElementById('res-fitment').textContent = fitmentVal;
+        document.getElementById('res-actual-total').textContent = actualTotal;
+        document.getElementById('res-bp-fixed').textContent = bpFixed;
+        document.getElementById('res-bal-da').textContent = balDaVal;
+        document.getElementById('res-hra-new').textContent = hraNewVal;
+        document.getElementById('res-gross-new').textContent = grossNew;
 
         // Summary Cards
-        document.getElementById('gross-new-val').textContent = grossNew.toLocaleString();
-        document.getElementById('gross-old-val').textContent = grossOld.toLocaleString();
-        document.getElementById('growth-val').textContent = `${growth.toLocaleString()} (${growthPerc}%)`;
+        document.getElementById('gross-new-val').textContent = grossNew;
+        document.getElementById('gross-old-val').textContent = grossOld;
+        document.getElementById('growth-val').textContent = `${growth} (${growthPerc}%)`;
     }
 
     // Initial calculation

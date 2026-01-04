@@ -37,9 +37,6 @@ function updateActiveInputs(id) {
     activeInputs.push(id);
 
     // If we have 4, remove the oldest one (index 0)
-    // But wait, if we have 4, the user is modifying the 4th one. 
-    // The one that was NOT in the previous set of 3 should ideally be the one being calculated, 
-    // but if the user decides to edit the calculated one, the "oldest" input of the other 3 becomes the new calculated one.
     if (activeInputs.length > 3) {
         activeInputs.shift();
     }
@@ -79,9 +76,6 @@ function calculate() {
         return;
     }
 
-    // Identify the target field (the one NOT in activeInputs)
-    // If we have 3 active inputs, the 4th one is the target.
-    // If we had more logic, we'd pick the one missing from the keys.
     const allKeys = Object.keys(fields);
     const targetKey = allKeys.find(key => !activeInputs.includes(key));
 
@@ -94,10 +88,6 @@ function calculate() {
     const E = parseFloat(fields.emi.value);
 
     let result = null;
-
-    // Perform calculation based on what is missing (Target)
-    // Note: We use the values from the DOM. If a value is missing but it's supposed to be an input... well, activeInputs logic handles "which ones imply the others".
-    // but we need to ensure the values are valid numbers.
 
     try {
         switch (targetKey) {
@@ -115,7 +105,6 @@ function calculate() {
                 break;
         }
     } catch (err) {
-        // Calculation error (e.g. impossible values)
         console.error(err);
         result = null;
     }
@@ -148,7 +137,6 @@ function calculate() {
             emi: parseFloat(fields.emi.value)
         }));
     } else {
-        // Invalid calculation result
         statusMsg.textContent = 'Invalid combination of values.';
         summaryCard.classList.remove('visible');
     }
@@ -168,8 +156,8 @@ function updateSummary(P, R, T, E) {
         return;
     }
 
-    totalInterestEl.textContent = formatCurrency(totalInterest);
-    totalPaymentEl.textContent = formatCurrency(totalPayment);
+    totalInterestEl.textContent = formatAmount(totalInterest);
+    totalPaymentEl.textContent = formatAmount(totalPayment);
 
     const interestPercent = (totalInterest / totalPayment) * 100;
     interestPercentEl.textContent = `${Math.round(interestPercent)}%`;
@@ -178,8 +166,8 @@ function updateSummary(P, R, T, E) {
     summaryCard.classList.add('visible');
 }
 
-function formatCurrency(val) {
-    return val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function formatAmount(val) {
+    return val.toFixed(2); // No commas
 }
 
 function validate(...args) {
@@ -199,11 +187,6 @@ function resetStyles() {
 }
 
 // Formulas
-// P = Principal
-// R = Annual Rate %
-// T = Years
-// E = EMI
-
 function calcEMI(P, R, T) {
     const r = R / 12 / 100;
     const n = T * 12;
@@ -223,20 +206,9 @@ function calcPrincipal(E, R, T) {
 function calcTenure(P, R, E) {
     const r = R / 12 / 100;
     if (r === 0) return P / E / 12;
-
-    // E = P * r * (1+r)^n / ((1+r)^n - 1)
-    // E/P = r * X / (X - 1)  where X = (1+r)^n
-    // E/P * (X - 1) = r * X
-    // E/P * X - E/P = r * X
-    // X (E/P - r) = E/P
-    // X = (E/P) / (E/P - r)
-    // X = E / (E - P*r)
-
     const numerator = E;
     const denominator = E - (P * r);
-
-    if (denominator <= 0) return null; // Impossible, means interest > EMI
-
+    if (denominator <= 0) return null;
     const X = numerator / denominator;
     const n = Math.log(X) / Math.log(1 + r);
     return n / 12;
@@ -244,35 +216,17 @@ function calcTenure(P, R, E) {
 
 function calcRate(P, T, E) {
     const n = T * 12;
-    // Solve for r in: E = P * r * (1+r)^n / ((1+r)^n - 1)
-    // f(r) = P * r * (1+r)^n / ((1+r)^n - 1) - E
-
-    // Binary search
-    // Low = 0, High = 1 (100% monthly... huge). 
-    // Usually R is annual. Let's assume max annual rate 200%. Monthly ~ 0.16.
-
     let low = 0.0000001;
-    let high = 0.2; // 20% monthly is huge. 
-    // Check if E > P/n (EMI must cover at least principal)
+    let high = 0.2;
     if (E * n < P) return null;
-
-    // E must be > P*r (interest component of first month) ideally? 
-    // Actually if E < P*r, balance grows. We want clean payoff.
-
-    // Simple check: E > P/n
-
     for (let i = 0; i < 50; i++) {
         const mid = (low + high) / 2;
         const calcE = (P * mid * Math.pow(1 + mid, n)) / (Math.pow(1 + mid, n) - 1);
-
         if (calcE > E) {
             high = mid;
         } else {
             low = mid;
         }
     }
-
-    const r = (low + high) / 2;
-    const annualR = r * 12 * 100;
-    return annualR;
+    return (low + high) / 2 * 12 * 100;
 }

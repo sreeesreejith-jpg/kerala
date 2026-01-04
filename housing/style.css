@@ -1,10 +1,10 @@
 :root {
-    --bg-dark: #f8fafc;
-    --card-bg: rgba(255, 255, 255, 0.9);
-    --text-main: #0f172a;
-    --text-muted: #475569;
-    --emi-red: #ef4444;
-    --glass-border: rgba(0, 0, 0, 0.08);
+    --bg-dark: #0f172a;
+    --card-bg: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --emi-red: #f87171;
+    --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -306,23 +306,21 @@ footer {
     color: var(--text-muted);
 }
 
-/* FORCE INPUT VISIBILITY FIX */
-/* FORCE INPUT VISIBILITY FIX - Light Mode */
 input,
 select,
 textarea {
-    background-color: #f1f5f9 !important;
-    color: #0f172a !important;
-    caret-color: #ef4444 !important;
-    border: 1px solid #e2e8f0 !important;
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    color: var(--text-main) !important;
+    caret-color: var(--emi-red) !important;
+    border: 1px solid var(--glass-border) !important;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-    background-color: #ffffff !important;
-    color: #0f172a !important;
-    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+    background-color: var(--card-bg) !important;
+    color: var(--text-main) !important;
+    box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.2) !important;
 }
 
 /* Chrome/Android Autofill Fix */
@@ -330,6 +328,6 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px #f1f5f9 inset !important;
-    -webkit-text-fill-color: #1e293b !important;
+    -webkit-box-shadow: 0 0 0 30px #1e293b inset !important;
+    -webkit-text-fill-color: var(--text-main) !important;
 }

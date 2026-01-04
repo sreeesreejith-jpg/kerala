@@ -18,23 +18,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Global variable to store stages for navigation
-    let payStagesList = [];
+    let payStagesList = [
+        23000, 23700, 24400, 25100, 25800, 26500, 27200, 27900, 28700, 29500,
+        30300, 31100, 32000, 32900, 33800, 34700, 35600, 36500, 37400, 38300,
+        39300, 40300, 41300, 42300, 43400, 44500, 45600, 46700, 47800, 49000,
+        50200, 51400, 52600, 53900, 55200, 56500, 57900, 59300, 60700, 62200,
+        63700, 65200, 66800, 68400, 70000, 71800, 73600, 75400, 77200, 79000,
+        81000, 83000, 85000, 87000, 89000, 91200, 93400, 95600, 97800, 100300,
+        102800, 105300, 107800, 110300, 112800, 115300, 118100, 120900, 123700,
+        126500, 129300, 132100, 134900, 137700, 140500, 143600, 146700, 149800,
+        153200, 156600, 160000, 163400, 166800
+    ];
 
-    // Fetch and populate Pay Stages
+    function populatePayStages(stages) {
+        const dataList = document.getElementById('pay-stages');
+        if (dataList && stages) {
+            dataList.innerHTML = '';
+            stages.forEach(stage => {
+                const option = document.createElement('option');
+                option.value = stage;
+                dataList.appendChild(option);
+            });
+        }
+    }
+
+    // Initial population
+    populatePayStages(payStagesList);
+
     fetch('../data/pay_stages.json')
         .then(response => response.json())
         .then(data => {
-            const dataList = document.getElementById('pay-stages');
-            if (dataList && data.payStages) {
-                payStagesList = data.payStages; // Store for smart navigation
-                data.payStages.forEach(stage => {
-                    const option = document.createElement('option');
-                    option.value = stage;
-                    dataList.appendChild(option);
-                });
+            if (data.payStages) {
+                payStagesList = data.payStages;
+                populatePayStages(payStagesList);
             }
         })
-        .catch(err => console.error('Error loading pay stages:', err));
+        .catch(err => console.log('Using embedded pay stages'));
 
     // Handle Up/Down Arrow Navigation & Clear-on-Focus (Ghost Value Pattern)
     const basicPayInput = document.getElementById('basic-pay-in');
@@ -45,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function activateGhostMode() {
         if (this.value.trim() !== "") {
             this.dataset.lastValid = this.value;
-            this.placeholder = this.value; // Show value as placeholder
-            this.value = ''; // Clear actual value to show full datalist
+            this.placeholder = this.value;
+            this.value = '';
         }
     }
 
@@ -123,12 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const grossOld = bp + daOldVal + daPendVal + hraOldVal;
 
         // Update Before UI
-        document.getElementById('res-bp-old').textContent = bp.toLocaleString();
-        document.getElementById('res-da-old').textContent = daOldVal.toLocaleString();
-        document.getElementById('res-da-pend').textContent = daPendVal.toLocaleString();
-        document.getElementById('res-hra-old').textContent = hraOldVal.toLocaleString();
-        document.getElementById('res-gross-old').textContent = grossOld.toLocaleString();
-        document.getElementById('gross-old-val').textContent = grossOld.toLocaleString();
+        document.getElementById('res-bp-old').textContent = bp;
+        document.getElementById('res-da-old').textContent = daOldVal;
+        document.getElementById('res-da-pend').textContent = daPendVal;
+        document.getElementById('res-hra-old').textContent = hraOldVal;
+        document.getElementById('res-gross-old').textContent = grossOld;
+        document.getElementById('gross-old-val').textContent = grossOld;
 
         // After Revision Calculations
         const daMergedVal = Math.round(bp * (daMergedPerc / 100));
@@ -147,19 +166,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const growthPerc = grossOld > 0 ? ((growth / grossOld) * 100).toFixed(1) : 0;
 
         // Update After UI
-        document.getElementById('res-bp-new').textContent = bp.toLocaleString();
-        document.getElementById('res-da-merged').textContent = daMergedVal.toLocaleString();
-        document.getElementById('res-fitment').textContent = fitmentVal.toLocaleString();
-        document.getElementById('res-actual-total').textContent = actualTotal.toLocaleString();
-        document.getElementById('res-bp-fixed').textContent = bpFixed.toLocaleString();
-        document.getElementById('res-bal-da').textContent = balDaVal.toLocaleString();
-        document.getElementById('res-hra-new').textContent = hraNewVal.toLocaleString();
-        document.getElementById('res-gross-new').textContent = grossNew.toLocaleString();
+        document.getElementById('res-bp-new').textContent = bp;
+        document.getElementById('res-da-merged').textContent = daMergedVal;
+        document.getElementById('res-fitment').textContent = fitmentVal;
+        document.getElementById('res-actual-total').textContent = actualTotal;
+        document.getElementById('res-bp-fixed').textContent = bpFixed;
+        document.getElementById('res-bal-da').textContent = balDaVal;
+        document.getElementById('res-hra-new').textContent = hraNewVal;
+        document.getElementById('res-gross-new').textContent = grossNew;
 
         // Summary Cards
-        document.getElementById('gross-new-val').textContent = grossNew.toLocaleString();
-        document.getElementById('gross-old-val').textContent = grossOld.toLocaleString();
-        document.getElementById('growth-val').textContent = `${growth.toLocaleString()} (${growthPerc}%)`;
+        document.getElementById('gross-new-val').textContent = grossNew;
+        document.getElementById('gross-old-val').textContent = grossOld;
+        document.getElementById('growth-val').textContent = `${growth} (${growthPerc}%)`;
     }
 
     // Initial calculation

@@ -22,16 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentEmi = 0;
 
-    function formatNumber(num) {
-        // Remove currency symbols, just format digits with commas
-        return new Intl.NumberFormat('en-IN', {
-            maximumFractionDigits: 0
-        }).format(num);
+    function formatAmount(num) {
+        return Math.round(num).toString();
     }
 
-    function parseIndianNumber(str) {
+    function parseAmount(str) {
         if (!str) return 0;
-        // Remove commas and parse
         return parseFloat(str.replace(/,/g, '')) || 0;
     }
 
@@ -62,28 +58,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentEmi = emi;
 
-        // Update UI (No symbols)
-        monthlyEmiDisplay.textContent = formatNumber(emi);
-        totalPrincipalBottom.textContent = formatNumber(principal);
+        // Update UI
+        monthlyEmiDisplay.textContent = formatAmount(emi);
+        totalPrincipalBottom.textContent = formatAmount(principal);
 
         updateBalances();
     }
 
     function updateBalances() {
-        const netSalary = parseIndianNumber(netSalaryInput.value);
-        const rent = parseIndianNumber(rentInput.value);
+        const netSalary = parseAmount(netSalaryInput.value);
+        const rent = parseAmount(rentInput.value);
 
         // Balance Salary (Net - EMI)
         const balanceEmi = netSalary - currentEmi;
-        balanceSalaryDisplay.value = formatNumber(balanceEmi);
+        balanceSalaryDisplay.value = formatAmount(balanceEmi);
 
         // Balance After Rent (Net - Rent)
         const balanceRent = netSalary - rent;
-        balanceAfterRentDisplay.value = formatNumber(balanceRent);
+        balanceAfterRentDisplay.value = formatAmount(balanceRent);
 
         // Final Balance (Balance After Rent - Balance After EMI)
         const finalBalance = balanceRent - balanceEmi;
-        finalBalanceDisplay.value = formatNumber(finalBalance);
+        finalBalanceDisplay.value = formatAmount(finalBalance);
     }
 
     // Event Listeners
@@ -95,18 +91,15 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('input', updateBalances);
     });
 
-    // Improve selection UX: Clear on focus/click to show all options, restore on blur if empty
+    // Improve selection UX
     const setupImprovedUX = (input) => {
         let tempValue = "";
-
         const clearInput = () => {
             tempValue = input.value;
             input.value = "";
         };
-
         input.addEventListener('focus', clearInput);
         input.addEventListener('click', clearInput);
-
         input.addEventListener('blur', () => {
             if (!input.value) {
                 input.value = tempValue;

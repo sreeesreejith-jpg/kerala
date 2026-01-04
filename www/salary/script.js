@@ -2,23 +2,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputs = document.querySelectorAll('input');
 
     // Global variable to store stages for navigation
-    let payStagesList = [];
+    let payStagesList = [
+        23000, 23700, 24400, 25100, 25800, 26500, 27200, 27900, 28700, 29500,
+        30300, 31100, 32000, 32900, 33800, 34700, 35600, 36500, 37400, 38300,
+        39300, 40300, 41300, 42300, 43400, 44500, 45600, 46700, 47800, 49000,
+        50200, 51400, 52600, 53900, 55200, 56500, 57900, 59300, 60700, 62200,
+        63700, 65200, 66800, 68400, 70000, 71800, 73600, 75400, 77200, 79000,
+        81000, 83000, 85000, 87000, 89000, 91200, 93400, 95600, 97800, 100300,
+        102800, 105300, 107800, 110300, 112800, 115300, 118100, 120900, 123700,
+        126500, 129300, 132100, 134900, 137700, 140500, 143600, 146700, 149800,
+        153200, 156600, 160000, 163400, 166800
+    ];
 
-    // Fetch and populate Pay Stages
+    function populatePayStages(stages) {
+        const dataList = document.getElementById('pay-stages');
+        if (dataList && stages) {
+            dataList.innerHTML = '';
+            stages.forEach(stage => {
+                const option = document.createElement('option');
+                option.value = stage;
+                dataList.appendChild(option);
+            });
+        }
+    }
+
+    // Initial population
+    populatePayStages(payStagesList);
+
     fetch('../data/pay_stages.json')
         .then(response => response.json())
         .then(data => {
-            const dataList = document.getElementById('pay-stages');
-            if (dataList && data.payStages) {
+            if (data.payStages) {
                 payStagesList = data.payStages;
-                data.payStages.forEach(stage => {
-                    const option = document.createElement('option');
-                    option.value = stage;
-                    dataList.appendChild(option);
-                });
+                populatePayStages(payStagesList);
             }
         })
-        .catch(err => console.error('Error loading pay stages:', err));
+        .catch(err => console.log('Using embedded pay stages'));
 
     // Earnings Inputs
     const basicPay = document.getElementById('basic-pay');
@@ -43,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
         this.dispatchEvent(new Event('input'));
     }
 
-    // Smart Navigation & Auto-List Logic
     basicPay.addEventListener('focus', activateGhostMode);
     basicPay.addEventListener('click', activateGhostMode);
     basicPay.addEventListener('blur', deactivateGhostMode);
@@ -109,8 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const deductBottom = document.getElementById('total-deduction-bottom');
     const netBottom = document.getElementById('net-salary-bottom');
 
-    function formatCurrency(num) {
-        return Math.round(num).toLocaleString('en-IN');
+    function formatAmount(num) {
+        return Math.round(num).toString();
     }
 
     function calculate() {
@@ -126,13 +144,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const hra = bp * (hrP / 100);
 
         // Update earnings labels
-        daVal.innerText = formatCurrency(da);
-        daPendingVal.innerText = formatCurrency(dap);
-        hraVal.innerText = formatCurrency(hra);
+        daVal.innerText = formatAmount(da);
+        daPendingVal.innerText = formatAmount(dap);
+        hraVal.innerText = formatAmount(hra);
 
         // Gross Salary
         const gross = bp + da + dap + hra + otherEarn;
-        grossValDisplay.innerText = formatCurrency(gross);
+        grossValDisplay.innerText = formatAmount(gross);
 
         // Deductions
         const d1 = parseFloat(gpfSub.value) || 0;
@@ -144,16 +162,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         const totalDeductions = d1 + d2 + d3 + d4 + d5 + d6;
-        totalDeductDisplay.innerText = formatCurrency(totalDeductions);
+        totalDeductDisplay.innerText = formatAmount(totalDeductions);
 
         // Net Salary
         const net = gross - totalDeductions;
-        netValDisplay.innerText = formatCurrency(net);
+        netValDisplay.innerText = formatAmount(net);
 
         // Update bottom summaries
-        if (grossBottom) grossBottom.innerText = formatCurrency(gross);
-        if (deductBottom) deductBottom.innerText = formatCurrency(totalDeductions);
-        if (netBottom) netBottom.innerText = formatCurrency(net);
+        if (grossBottom) grossBottom.innerText = formatAmount(gross);
+        if (deductBottom) deductBottom.innerText = formatAmount(totalDeductions);
+        if (netBottom) netBottom.innerText = formatAmount(net);
     }
 
     // Add listeners to all inputs

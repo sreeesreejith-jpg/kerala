@@ -128,9 +128,8 @@ function evaluate(expr) {
 
 function formatNumber(num) {
     if (num === null || isNaN(num)) return "0";
-    const parts = num.toString().split(".");
-    parts[0] = parseInt(parts[0]).toLocaleString('en-IN');
-    return parts.join(".");
+    // Just return as string without commas
+    return num.toString();
 }
 
 // Keyboard Support

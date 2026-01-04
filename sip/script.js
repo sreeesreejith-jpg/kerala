@@ -17,12 +17,8 @@ window.addEventListener('load', () => {
     display.card.classList.remove('visible');
 });
 
-function formatCurrency(num) {
-    return new Intl.NumberFormat('en-IN', {
-        style: 'currency',
-        currency: 'INR',
-        maximumFractionDigits: 0
-    }).format(num);
+function formatAmount(num) {
+    return Math.round(num).toString();
 }
 
 function calculate() {
@@ -46,9 +42,9 @@ function calculate() {
     const estReturns = totalValue - investedAmount;
 
     // Update UI
-    display.total.textContent = formatCurrency(totalValue);
-    display.invested.textContent = formatCurrency(investedAmount);
-    display.returns.textContent = formatCurrency(estReturns);
+    display.total.textContent = formatAmount(totalValue);
+    display.invested.textContent = formatAmount(investedAmount);
+    display.returns.textContent = formatAmount(estReturns);
 
     display.card.classList.add('visible');
 }

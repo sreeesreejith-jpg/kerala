@@ -1,12 +1,12 @@
 {
-    "name": "Sree-Apps",
-    "short_name": "Sree-Apps",
-    "id": "com.sree.apps.portal",
+    "name": "Nithara Apps",
+    "short_name": "Nithara",
+    "id": "com.sreeejith.nithara.app",
     "description": "Your centralized suite of professional financial and utility tools.",
     "start_url": "./index.html",
     "display": "standalone",
-    "background_color": "#f8fafc",
-    "theme_color": "#4f46e5",
+    "background_color": "#0f172a",
+    "theme_color": "#0f172a",
     "orientation": "portrait",
     "categories": [
         "finance",

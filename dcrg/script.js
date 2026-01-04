@@ -127,12 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputs = [basicPayInput, daPercentageInput, serviceYearsInput];
 
     /**
-     * Format number as Indian Currency (₹)
+     * Format number without commas
      */
-    const formatCurrency = (num) => {
-        return new Intl.NumberFormat('en-IN', {
-            maximumFractionDigits: 0
-        }).format(num);
+    const formatAmount = (num) => {
+        return Math.round(num).toString();
     };
 
     /**
@@ -149,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 1. Average Emoluments
         const avgEmoluments = bp + (bp * da / 100);
-        avgEmolumentsInput.value = Math.round(avgEmoluments).toLocaleString('en-IN');
+        avgEmolumentsInput.value = Math.round(avgEmoluments);
 
         // 2. Pension Calculation
         // Formula: (Average Emoluments / 2) * (Completed Service / 30)
@@ -178,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalLumpSum = commutationAmount + dcrg;
 
         // Update Dashboard
-        const displayValue = (val) => (val > 0) ? formatCurrency(val) : "";
+        const displayValue = (val) => (val > 0) ? formatAmount(val) : "";
 
         if (totalBenefitsHeader) totalBenefitsHeader.textContent = displayValue(totalLumpSum);
         if (commuteHeader) commuteHeader.textContent = displayValue(commutationAmount);

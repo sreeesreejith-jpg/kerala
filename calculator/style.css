@@ -1,12 +1,12 @@
 :root {
-    --bg-color: #f8fafc;
-    --calc-bg: #ffffff;
-    --btn-bg: #f1f5f9;
-    --btn-text: #0f172a;
-    --accent-color: #0ea5e9;
-    --accent-glow: rgba(14, 165, 233, 0.1);
-    --op-color: #7c3aed;
-    --op-glow: rgba(124, 58, 237, 0.1);
+    --bg-color: #0f172a;
+    --calc-bg: #1e293b;
+    --btn-bg: #334155;
+    --btn-text: #f8fafc;
+    --accent-color: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.1);
+    --op-color: #8b5cf6;
+    --op-glow: rgba(139, 92, 246, 0.1);
     --equal-bg: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
     --font-main: 'Outfit', sans-serif;
 }
@@ -26,7 +26,7 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    color: #0f172a;
+    color: #f8fafc;
 }
 
 .app-container {
@@ -74,7 +74,7 @@ body {
 /* Cursor and Expression Styling */
 .history {
     font-size: 1.2rem;
-    color: #475569;
+    color: #94a3b8;
     margin-bottom: 15px;
     min-height: 1.6rem;
     width: 100%;
@@ -122,7 +122,7 @@ body {
 .current-input {
     font-size: 3.5rem;
     font-weight: 600;
-    color: #0f172a;
+    color: #ffffff;
     text-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
     transition: all 0.3s ease;
 }
@@ -212,7 +212,7 @@ body {
     text-align: center;
     padding: 10px 0;
     font-size: 0.8rem;
-    color: #475569;
+    color: #94a3b8;
     letter-spacing: 0.5px;
     margin-top: auto;
 }

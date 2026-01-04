@@ -127,8 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const deductBottom = document.getElementById('total-deduction-bottom');
     const netBottom = document.getElementById('net-salary-bottom');
 
-    function formatCurrency(num) {
-        return Math.round(num).toLocaleString('en-IN');
+    function formatAmount(num) {
+        return Math.round(num).toString();
     }
 
     function calculate() {
@@ -144,13 +144,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const hra = bp * (hrP / 100);
 
         // Update earnings labels
-        daVal.innerText = formatCurrency(da);
-        daPendingVal.innerText = formatCurrency(dap);
-        hraVal.innerText = formatCurrency(hra);
+        daVal.innerText = formatAmount(da);
+        daPendingVal.innerText = formatAmount(dap);
+        hraVal.innerText = formatAmount(hra);
 
         // Gross Salary
         const gross = bp + da + dap + hra + otherEarn;
-        grossValDisplay.innerText = formatCurrency(gross);
+        grossValDisplay.innerText = formatAmount(gross);
 
         // Deductions
         const d1 = parseFloat(gpfSub.value) || 0;
@@ -162,16 +162,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         const totalDeductions = d1 + d2 + d3 + d4 + d5 + d6;
-        totalDeductDisplay.innerText = formatCurrency(totalDeductions);
+        totalDeductDisplay.innerText = formatAmount(totalDeductions);
 
         // Net Salary
         const net = gross - totalDeductions;
-        netValDisplay.innerText = formatCurrency(net);
+        netValDisplay.innerText = formatAmount(net);
 
         // Update bottom summaries
-        if (grossBottom) grossBottom.innerText = formatCurrency(gross);
-        if (deductBottom) deductBottom.innerText = formatCurrency(totalDeductions);
-        if (netBottom) netBottom.innerText = formatCurrency(net);
+        if (grossBottom) grossBottom.innerText = formatAmount(gross);
+        if (deductBottom) deductBottom.innerText = formatAmount(totalDeductions);
+        if (netBottom) netBottom.innerText = formatAmount(net);
     }
 
     // Add listeners to all inputs

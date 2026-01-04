@@ -1,10 +1,10 @@
 :root {
-    --bg-dark: #0a0f1e;
-    --card-bg: rgba(20, 25, 45, 0.85);
-    --text-main: #e2e8f0;
+    --bg-dark: #0f172a;
+    --card-bg: #1e293b;
+    --text-main: #f8fafc;
     --text-muted: #94a3b8;
-    --emi-red: #ff3b3b;
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --emi-red: #f87171;
+    --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -305,24 +305,29 @@ footer {
     font-size: 0.7rem;
     color: var(--text-muted);
 }
-/* FORCE INPUT VISIBILITY FIX */
-input, select, textarea {
-    background-color: #1e293b !important;
-    color: #ffffff !important;
-    caret-color: white !important;
+
+input,
+select,
+textarea {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    color: var(--text-main) !important;
+    caret-color: var(--emi-red) !important;
+    border: 1px solid var(--glass-border) !important;
 }
 
-input:focus, select:focus, textarea:focus {
-    background-color: #334155 !important;
-    color: #ffffff !important;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2) !important;
+input:focus,
+select:focus,
+textarea:focus {
+    background-color: var(--card-bg) !important;
+    color: var(--text-main) !important;
+    box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.2) !important;
 }
 
 /* Chrome/Android Autofill Fix */
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px #1e293b inset !important;
-    -webkit-text-fill-color: white !important;
+    -webkit-text-fill-color: var(--text-main) !important;
 }
