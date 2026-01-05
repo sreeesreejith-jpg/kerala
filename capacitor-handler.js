@@ -17,19 +17,16 @@
 
         function forceExit() {
             try {
-                if (App && App.exitApp) {
-                    App.exitApp();
-                }
+                if (App && App.exitApp) App.exitApp();
             } catch (e) { }
             try {
-                if (navigator.app && navigator.app.exitApp) {
-                    navigator.app.exitApp();
-                }
+                if (App && App.minimizeApp) App.minimizeApp();
+            } catch (e) { }
+            try {
+                if (navigator.app && navigator.app.exitApp) navigator.app.exitApp();
             } catch (e) { }
             window.close();
-            setTimeout(() => {
-                window.location.href = "about:blank";
-            }, 300);
+            document.body.innerHTML = "<div style='background:#0f172a; height:100vh; width:100vw; display:flex; align-items:center; justify-content:center; color:white; font-family:sans-serif;'><h1>Closing...</h1></div>";
         }
 
         App.addListener('backButton', function () {

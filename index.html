@@ -108,31 +108,28 @@
 
     <script>
         function forceExit() {
-            // Priority 1: Capacitor
             const App = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
+
+            // Priority 1: Exit App
             try {
-                if (App && App.exitApp) {
-                    App.exitApp();
-                }
+                if (App && App.exitApp) App.exitApp();
             } catch (e) { }
 
-            // Priority 2: Cordova/Legacy
+            // Priority 2: Minimize (Fallback)
             try {
-                if (navigator.app && navigator.app.exitApp) {
-                    navigator.app.exitApp();
-                }
+                if (App && App.minimizeApp) App.minimizeApp();
             } catch (e) { }
 
-            // Priority 3: Browser Close
+            // Priority 3: Legacy Exit
+            try {
+                if (navigator.app && navigator.app.exitApp) navigator.app.exitApp();
+            } catch (e) { }
+
+            // Priority 4: Window Close
             window.close();
 
-            // Visual Fallback
-            document.body.innerHTML = "<div style='background:#0f172a; height:100vh; display:flex; align-items:center; justify-content:center; color:white; font-family:sans-serif;'><h1>Closing App...</h1></div>";
-
-            // Last resort: Redirect away
-            setTimeout(() => {
-                window.location.href = "about:blank";
-            }, 300);
+            // Visual State Only (No redirect to avoid "Open With" box)
+            document.body.innerHTML = "<div style='background:#0f172a; height:100vh; width:100vw; display:flex; align-items:center; justify-content:center; color:white; font-family:sans-serif;'><h1>Closing...</h1></div>";
         }
         document.getElementById('exit-btn').addEventListener('click', forceExit);
     </script>
