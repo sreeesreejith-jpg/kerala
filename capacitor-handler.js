@@ -1,57 +1,42 @@
 (function () {
     /**
      * Capacitor Hardware Back Button Handler
-     * Refined for robust navigation and app exit.
+     * Robust approach used by most mobile web apps.
      */
     function setupBackButton() {
-        // Safe access to the Capacitor App plugin
         const App = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
 
-        // If the plugin isn't ready yet, retry after a short delay
         if (!App) {
             setTimeout(setupBackButton, 200);
             return;
         }
 
-        // Remove existing listeners to avoid duplicates
         if (App.removeAllListeners) {
             App.removeAllListeners();
         }
 
-        // Add custom listener
-        App.addListener('backButton', function (data) {
+        App.addListener('backButton', function () {
             const path = window.location.pathname;
 
-            // Define what constitutes the "Home Page"
-            // Adjust this based on your actual deployment URL structure
-            // e.g. /nithara/index.html or / or /index.html
-            const isHomePage =
-                path.endsWith('/nithara/') ||
-                path.endsWith('/index.html') && (
-                    path.endsWith('/nithara/index.html') ||
-                    path === '/index.html' ||
-                    path === '/' ||
-                    // Ensure we don't accidentally match sub-app index.html files
-                    (!path.includes('/salary/') &&
-                        !path.includes('/emi/') &&
-                        !path.includes('/dcrg/') &&
-                        !path.includes('/pay-revision/') &&
-                        !path.includes('/sip/') &&
-                        !path.includes('/housing/') &&
-                        !path.includes('/calculator/'))
-                );
+            // List of sub-app identifiers
+            const subApps = ['/salary/', '/pay-revision/', '/dcrg/', '/emi/', '/sip/', '/housing/', '/calculator/'];
+            const isSubApp = subApps.some(app => path.includes(app));
 
-            if (isHomePage) {
-                // If at home, EXIT the app
+            if (!isSubApp) {
+                // CASE 1: At Portal/Home -> EXIT
                 App.exitApp();
             } else {
-                // If anywhere else, go back in history
-                window.history.back();
+                // CASE 2: Inside a sub-app -> GO BACK
+                // If there's history, use it. If not (app opened here), go to Portal.
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.location.href = '../index.html';
+                }
             }
         });
     }
 
-    // Initialize
     if (document.readyState === 'complete') {
         setupBackButton();
     } else {

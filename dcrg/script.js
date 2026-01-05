@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             : payStagesList;
 
         if (filtered.length === 0) {
-            dropdown.innerHTML = '<li style="color:var(--text-muted); padding:0.5rem; font-size:0.9rem;">No matches</li>';
+            dropdown.classList.remove('show');
             return;
         }
 
