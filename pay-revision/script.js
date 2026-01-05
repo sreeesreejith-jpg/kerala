@@ -30,96 +30,104 @@ document.addEventListener('DOMContentLoaded', () => {
         153200, 156600, 160000, 163400, 166800
     ];
 
-    function populatePayStages(stages) {
-        const dataList = document.getElementById('pay-stages');
-        if (dataList && stages) {
-            dataList.innerHTML = '';
-            stages.forEach(stage => {
-                const option = document.createElement('option');
-                option.value = stage;
-                dataList.appendChild(option);
+    // --- Custom Dropdown Logic ---
+    const basicPayInput = document.getElementById('basic-pay-in');
+    const dropdown = document.getElementById('custom-dropdown');
+
+    // Store current value to dataset for reference
+    basicPayInput.dataset.lastValid = basicPayInput.value;
+
+    function renderDropdown(filterText = "") {
+        dropdown.innerHTML = "";
+
+        // Filter logic: If empty, show all. If text, show matches.
+        const filtered = filterText
+            ? payStagesList.filter(stage => stage.toString().startsWith(filterText))
+            : payStagesList;
+
+        if (filtered.length === 0) {
+            dropdown.innerHTML = '<li style="color:var(--text-muted); padding:0.5rem; font-size:0.9rem;">No matches</li>';
+            return;
+        }
+
+        filtered.forEach(stage => {
+            const li = document.createElement('li');
+            li.textContent = stage;
+            li.addEventListener('mousedown', (e) => {
+                // Use mousedown to prevent blur from firing before click
+                e.preventDefault();
+                selectValue(stage);
             });
+            dropdown.appendChild(li);
+        });
+    }
+
+    function selectValue(val) {
+        basicPayInput.value = val;
+        basicPayInput.dataset.lastValid = val; // Update ghost ref
+        dropdown.classList.remove('show');
+        calculate(); // Trigger calc
+    }
+
+    function showDropdown() {
+        renderDropdown(""); // Show all initially or filter based on current val? 
+        dropdown.classList.add('show');
+
+        // Auto-scroll to current value if exists
+        const currentVal = parseInt(basicPayInput.value);
+        if (currentVal) {
+            const items = Array.from(dropdown.querySelectorAll('li'));
+            const match = items.find(li => li.textContent == currentVal);
+            if (match) {
+                match.scrollIntoView({ block: 'center' });
+                match.classList.add('active');
+            }
         }
     }
 
-    // Initial population
-    populatePayStages(payStagesList);
+    function hideDropdown() {
+        setTimeout(() => {
+            dropdown.classList.remove('show');
+        }, 150);
+    }
 
+    // Input Listeners
+    basicPayInput.addEventListener('focus', function () {
+        this.select();
+        showDropdown();
+    });
+
+    basicPayInput.addEventListener('click', function () {
+        this.select();
+        showDropdown();
+    });
+
+    basicPayInput.addEventListener('input', function () {
+        // If typing manual value
+        calculate();
+        // Filter the list live
+        renderDropdown(this.value);
+        dropdown.classList.add('show');
+    });
+
+    basicPayInput.addEventListener('blur', function () {
+        if (this.value.trim() === "") {
+            this.value = this.dataset.lastValid || "";
+            calculate();
+        }
+        hideDropdown();
+    });
+
+    // Fetch external data if available
     fetch('../data/pay_stages.json')
         .then(response => response.json())
         .then(data => {
             if (data.payStages) {
                 payStagesList = data.payStages;
-                populatePayStages(payStagesList);
             }
         })
         .catch(err => console.log('Using embedded pay stages'));
 
-    // Handle Up/Down Arrow Navigation & Clear-on-Focus (Ghost Value Pattern)
-    const basicPayInput = document.getElementById('basic-pay-in');
-
-    // Store current value to dataset for reference
-    basicPayInput.dataset.lastValid = basicPayInput.value;
-
-    function activateGhostMode() {
-        if (this.value.trim() !== "") {
-            this.dataset.lastValid = this.value;
-            this.placeholder = this.value;
-            this.value = '';
-        }
-    }
-
-    function deactivateGhostMode() {
-        if (this.value.trim() === "") {
-            this.value = this.dataset.lastValid; // Restore if nothing selected
-        } else {
-            this.dataset.lastValid = this.value; // Update if new value selected
-        }
-        // Calculate immediately to ensure UI is in sync
-        calculate();
-    }
-
-    basicPayInput.addEventListener('focus', activateGhostMode);
-    basicPayInput.addEventListener('click', activateGhostMode);
-    basicPayInput.addEventListener('blur', deactivateGhostMode);
-
-    basicPayInput.addEventListener('keydown', function (e) {
-        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-            if (payStagesList.length === 0) return;
-
-            e.preventDefault();
-
-            // Use current value or ghost value (stored in dataset)
-            let currentValStr = this.value;
-            if (currentValStr === '') {
-                currentValStr = this.dataset.lastValid || "0";
-            }
-
-            const currentVal = parseInt(currentValStr) || 0;
-
-            let currentIndex = payStagesList.indexOf(currentVal);
-
-            // If not found (custom value), find closest
-            if (currentIndex === -1) {
-                currentIndex = payStagesList.findIndex(val => val >= currentVal);
-                if (currentIndex === -1) currentIndex = payStagesList.length - 1;
-            }
-
-            let nextIndex = currentIndex;
-            if (e.key === 'ArrowUp') {
-                nextIndex = currentIndex + 1;
-            } else {
-                nextIndex = currentIndex - 1;
-            }
-
-            // Boundary checks
-            if (nextIndex >= 0 && nextIndex < payStagesList.length) {
-                this.value = payStagesList[nextIndex];
-                this.dataset.lastValid = this.value; // Update ghost ref
-                calculate(); // Trigger calculation
-            }
-        }
-    });
 
     function calculate() {
         const bp = parseFloat(document.getElementById('basic-pay-in').value) || 0;

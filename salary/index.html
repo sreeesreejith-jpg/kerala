@@ -57,9 +57,11 @@
                 <div class="input-group">
                     <div class="input-field">
                         <label>Basic Pay</label>
-                        <div class="input-with-result">
-                            <input type="number" id="basic-pay" value="60700" step="100" list="pay-stages">
-                            <datalist id="pay-stages"></datalist>
+                        <div class="input-wrapper">
+                            <input type="number" id="basic-pay" value="60700" step="100" autocomplete="off">
+                            <ul id="custom-dropdown" class="custom-dropdown">
+                                <!-- Items populated by JS -->
+                            </ul>
                         </div>
                     </div>
 

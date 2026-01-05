@@ -65,8 +65,11 @@
                     <div class="input-group">
                         <label for="basicPay">Basic Pay (BP)</label>
                         <div class="input-wrapper">
-                            <input type="number" id="basicPay" min="0" step="100" list="pay-stages" value="60700">
-                            <datalist id="pay-stages"></datalist>
+                            <input type="number" id="basicPay" value="60700" placeholder="Enter Basic Pay"
+                                autocomplete="off">
+                            <ul id="custom-dropdown" class="custom-dropdown">
+                                <!-- Items populated by JS -->
+                            </ul>
                         </div>
                     </div>
                     <div class="input-group">
