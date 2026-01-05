@@ -95,9 +95,49 @@
             </div>
         </main>
     </div>
+    <div class="exit-container">
+        <button id="exit-btn" class="exit-button" title="Exit App">
+            <span class="exit-icon">✕</span> Exit App
+        </button>
+    </div>
+
     <div class="footer-email">
         email: sreee.sreejith@gmail.com
     </div>
+
+    <script>
+        function forceExit() {
+            const App = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
+
+            // Strategy 1: Capacitor Exit
+            try {
+                if (App && App.exitApp) App.exitApp();
+            } catch (e) { }
+
+            // Strategy 2: Cordova/Legacy Exit
+            try {
+                if (navigator.app && navigator.app.exitApp) navigator.app.exitApp();
+            } catch (e) { }
+
+            // Strategy 3: Window Close (for PWA/Web fallback)
+            window.close();
+
+            // Visual State: Show 'Closing...' to prevent 'Open With' dialog
+            document.body.innerHTML = "<div style='background:#0f172a; height:100vh; width:100vw; display:flex; align-items:center; justify-content:center; color:white; font-family:sans-serif;'><h1>Closing...</h1></div>";
+        }
+        
+        const exitBtn = document.getElementById('exit-btn');
+        if (exitBtn) {
+            exitBtn.addEventListener('click', forceExit);
+            // Hybrid logic: Only show Exit button if Capacitor is detected
+            if (!window.Capacitor) {
+                // Wait briefly for Capacitor to initialize, if still not there, hide it
+                setTimeout(() => {
+                    if (!window.Capacitor) exitBtn.parentElement.style.display = 'none';
+                }, 1000);
+            }
+        }
+    </script>
 </body>
 
 </html>

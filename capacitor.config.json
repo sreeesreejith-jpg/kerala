@@ -1,10 +1,12 @@
 {
-  "appId": "com.sreejith.nithara",
-  "appName": "Nithara Apps",
+  "appId": "com.sreejith.kerala",
+  "appName": "Kerala Apps",
   "webDir": "www",
   "server": {
-    "url": "https://sreeesreejith-jpg.github.io/nithara/",
-    "allowNavigation": ["sreeesreejith-jpg.github.io"],
+    "url": "https://sreeesreejith-jpg.github.io/kerala/",
+    "allowNavigation": [
+      "sreeesreejith-jpg.github.io"
+    ],
     "cleartext": true
   }
 }
