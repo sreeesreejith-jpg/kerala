@@ -95,9 +95,27 @@
             </div>
         </main>
     </div>
+    <div class="exit-container">
+        <button id="exit-btn" class="exit-button" title="Exit App">
+            <span class="exit-icon">✕</span> Exit App
+        </button>
+    </div>
+
     <div class="footer-email">
         email: sreee.sreejith@gmail.com
     </div>
+
+    <script>
+        document.getElementById('exit-btn').addEventListener('click', () => {
+            const App = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
+            if (App && App.exitApp) {
+                App.exitApp();
+            } else {
+                console.log("Exit App not available (Browser mode)");
+                alert("Exit button clicked (App would close on Mobile)");
+            }
+        });
+    </script>
 </body>
 
 </html>
